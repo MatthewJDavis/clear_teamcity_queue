@@ -43,7 +43,7 @@ def check_for_agent(queueUrl, buildId):
     if agent.agents['count'] == '0':
         response = remove_builds(buildId,headers)
         removed = untangle.parse(response.content.decode())
-        return (f"Removed build: {removed.build.buildType['webUrl']}")
+        return (f"No available agents. Removed build: {removed.build.buildType['webUrl']}")
 
 
 response = request_teamcity(queueUrl,headers)
