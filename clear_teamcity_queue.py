@@ -32,7 +32,7 @@ def remove_builds(buildId):
         buildUrl = f'{queueUrl}/id:{buildId}'
         response = requests.post(buildUrl, data=data, headers=headers)
         response.raise_for_status()
-        print(response.content)
+        return response
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')
     except Exception as err:
@@ -45,7 +45,9 @@ def check_for_agent(queueUrl, buildId):
     xml = agentInfo.content.decode()
     agent = untangle.parse(xml)
     if agent.agents['count'] == '0':
-        remove_builds(buildId)
+        response = remove_builds(buildId)
+        removed = untangle.parse(response.content.decode())
+        return (f"Removed build: {removed.build.buildType['webUrl']}")
 
 
 response = request_teamcity(queueUrl)
