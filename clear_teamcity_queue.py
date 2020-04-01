@@ -55,7 +55,3 @@ if len(queueList.builds) > 0:
         check_for_agent(queueUrl=queueUrl, buildId=buildInfo['id'])
 else:
     print('No builds in the queue')
-
-
-
-
