@@ -11,7 +11,7 @@ headers = {
     'Content-Type': 'application/xml',
 }
 
-def request_teamcity(url):
+def request_teamcity(url, headers):
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
@@ -22,13 +22,9 @@ def request_teamcity(url):
     return response
 
 # remove from queue
-def remove_builds(buildId):
+def remove_builds(buildId, headers):
     try:
         data = "<buildCancelRequest comment='No agents' readdIntoQueue='false' />"
-        headers = {
-            'Content-Type': 'application/xml',
-            'Authorization': f'Bearer {token}',
-        }
         buildUrl = f'{queueUrl}/id:{buildId}'
         response = requests.post(buildUrl, data=data, headers=headers)
         response.raise_for_status()
@@ -41,16 +37,16 @@ def remove_builds(buildId):
 # Check if build has an agent and delete if not
 def check_for_agent(queueUrl, buildId):
     agentUrl = f'{queueUrl}/id:{buildId}/compatibleAgents'
-    agentInfo = request_teamcity(agentUrl)
+    agentInfo = request_teamcity(agentUrl,headers)
     xml = agentInfo.content.decode()
     agent = untangle.parse(xml)
     if agent.agents['count'] == '0':
-        response = remove_builds(buildId)
+        response = remove_builds(buildId,headers)
         removed = untangle.parse(response.content.decode())
         return (f"Removed build: {removed.build.buildType['webUrl']}")
 
 
-response = request_teamcity(queueUrl)
+response = request_teamcity(queueUrl,headers)
 xml = response.content.decode()
 queueList = untangle.parse(xml)
 
