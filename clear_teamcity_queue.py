@@ -52,9 +52,11 @@ response = request_teamcity(queueUrl)
 xml = response.content.decode()
 queueList = untangle.parse(xml)
 
-for buildInfo in queueList.builds.build:
-    check_for_agent(queueUrl=queueUrl, buildId=buildInfo['id'])
-
+if len(queueList.builds) > 0:
+    for buildInfo in queueList.builds.build:
+        check_for_agent(queueUrl=queueUrl, buildId=buildInfo['id'])
+else:
+    print('No builds in the queue')
 
 
 
