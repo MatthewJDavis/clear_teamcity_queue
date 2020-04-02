@@ -28,7 +28,7 @@ steps:
 
 - script: |
     pip install pylint
-    pylint pylint clear_teamcity_queue.py
+    pylint clear_teamcity_queue.py
   displayName: 'pylint'
 
 - script: |
