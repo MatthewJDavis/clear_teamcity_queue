@@ -12,8 +12,8 @@ strategy:
   matrix:
     Python36:
       python.version: '3.6'
-    Python37:
-      python.version: '3.7'
+  #  Python37:
+   #   python.version: '3.7'
 
 steps:
 - task: UsePythonVersion@0
@@ -27,6 +27,12 @@ steps:
   displayName: 'Install dependencies'
 
 - script: |
+    pip install pylint
+    pylint pylint clear_teamcity_queue.py
+  displayName: 'pylint'
+
+- script: |
     pip install pytest pytest-azurepipelines
     pytest
   displayName: 'pytest'
+
