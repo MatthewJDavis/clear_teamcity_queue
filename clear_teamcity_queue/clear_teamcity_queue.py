@@ -9,10 +9,10 @@ HEADERS = {
     'Content-Type': 'application/xml',
 }
 
-queueList = get_queue_info(queueUrl=QUEUEURL, headers=HEADERS)
+queue_list = get_queue_info(queueUrl=QUEUEURL, headers=HEADERS)
 
-if len(queueList.builds) > 0:
-    for buildInfo in queueList.builds.build:
+if len(queue_list.builds) > 0:
+    for buildInfo in queue_list.builds.build:
         removed = check_for_agent(
             queueUrl=QUEUEURL, buildId=buildInfo['id'], headers=HEADERS)
         print(removed)
