@@ -47,3 +47,4 @@ def check_for_agent(queue_url, build_id, headers):
         removed = untangle.parse(response.content.decode())
         return f"No available agents to run build. Removed build:\
         {removed.build.buildType['webUrl']}"
+    return 'Build has agents to run on.'
