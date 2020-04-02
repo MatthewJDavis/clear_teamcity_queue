@@ -1,15 +1,7 @@
-import os
 import requests
 from requests.exceptions import HTTPError
 import untangle
 
-baseUrl = 'http://localhost:8111/app/rest'
-queueUrl = f'{baseUrl}/buildQueue'
-token = os.getenv('TOKEN')
-headers = {
-    'Authorization': f'Bearer {token}',
-    'Content-Type': 'application/xml',
-}
 
 def request_teamcity(url, headers):
     try:
@@ -22,9 +14,11 @@ def request_teamcity(url, headers):
     return response
 
 # remove from queue
-def remove_builds(buildId, headers):
+
+
+def remove_builds(queueUrl, buildId, headers):
     try:
-        data = "<buildCancelRequest comment='No agents' readdIntoQueue='false' />"
+        data = "<buildCancelRequest comment='No available agents to run build.' readdIntoQueue='false' />"
         buildUrl = f'{queueUrl}/id:{buildId}'
         response = requests.post(buildUrl, data=data, headers=headers)
         response.raise_for_status()
@@ -35,23 +29,14 @@ def remove_builds(buildId, headers):
         print(f'Another error occurred {err}')
 
 # Check if build has an agent and delete if not
-def check_for_agent(queueUrl, buildId):
+
+
+def check_for_agent(queueUrl, buildId, headers):
     agentUrl = f'{queueUrl}/id:{buildId}/compatibleAgents'
-    agentInfo = request_teamcity(agentUrl,headers)
+    agentInfo = request_teamcity(agentUrl, headers)
     xml = agentInfo.content.decode()
     agent = untangle.parse(xml)
     if agent.agents['count'] == '0':
-        response = remove_builds(buildId,headers)
+        response = remove_builds(queueUrl, buildId, headers)
         removed = untangle.parse(response.content.decode())
-        return (f"No available agents. Removed build: {removed.build.buildType['webUrl']}")
-
-
-response = request_teamcity(queueUrl,headers)
-xml = response.content.decode()
-queueList = untangle.parse(xml)
-
-if len(queueList.builds) > 0:
-    for buildInfo in queueList.builds.build:
-        check_for_agent(queueUrl=queueUrl, buildId=buildInfo['id'])
-else:
-    print('No builds in the queue')
+        return (f"No available agents to run build. Removed build: {removed.build.buildType['webUrl']}")

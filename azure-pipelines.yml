@@ -28,8 +28,13 @@ steps:
 
 - script: |
     pip install pylint
-    pylint clear_teamcity_queue.py
-  displayName: 'pylint'
+    pylint clear_teamcity_queue/clear_teamcity_queue.py
+  displayName: 'pylint script'
+
+- script: |
+    pip install pylint
+    pylint clear_teamcity_queue/helpers.py
+  displayName: 'pylint helpers'
 
 - script: |
     pip install pytest pytest-azurepipelines
