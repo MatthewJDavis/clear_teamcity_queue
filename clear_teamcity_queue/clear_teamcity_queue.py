@@ -14,7 +14,7 @@ QUEUE = get_queue_info(queue_url=QUEUE_URL, headers=HEADERS)
 if len(QUEUE.builds) > 0:
     for buildInfo in QUEUE.builds.build:
         removed = check_for_agent(
-            queue_url=QUEUE_URL, buildId=buildInfo['id'], headers=HEADERS)
+            queue_url=QUEUE_URL, build_id=buildInfo['id'], headers=HEADERS)
         print(removed)
 else:
     print('No builds in the queue')

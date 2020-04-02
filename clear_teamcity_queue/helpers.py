@@ -21,13 +21,13 @@ def get_queue_info(queue_url, headers):
 
 
 # remove from queue
-def remove_builds(queue_url, buildId, headers):
+def remove_builds(queue_url, build_id, headers):
     try:
         data = "<buildCancelRequest \
                 comment = 'No available agents to run build.'\
                 readdIntoQueue='false' />"
-        buildUrl = f'{queue_url}/id:{buildId}'
-        response = requests.post(buildUrl, data=data, headers=headers)
+        build_url = f'{queue_url}/id:{build_id}'
+        response = requests.post(build_url, data=data, headers=headers)
         response.raise_for_status()
         return response
     except HTTPError as http_err:
@@ -37,13 +37,13 @@ def remove_builds(queue_url, buildId, headers):
 
 
 # Check if build has an agent and delete if not
-def check_for_agent(queue_url, buildId, headers):
-    agentUrl = f'{queue_url}/id:{buildId}/compatibleAgents'
+def check_for_agent(queue_url, build_id, headers):
+    agentUrl = f'{queue_url}/id:{build_id}/compatibleAgents'
     agentInfo = request_teamcity(agentUrl, headers)
     xml = agentInfo.content.decode()
     agent = untangle.parse(xml)
     if agent.agents['count'] == '0':
-        response = remove_builds(queue_url, buildId, headers)
+        response = remove_builds(queue_url, build_id, headers)
         removed = untangle.parse(response.content.decode())
         return f"No available agents to run build. Removed build:\
         {removed.build.buildType['webUrl']}"
