@@ -38,9 +38,9 @@ def remove_builds(queue_url, build_id, headers):
 
 # Check if build has an agent and delete if not
 def check_for_agent(queue_url, build_id, headers):
-    agentUrl = f'{queue_url}/id:{build_id}/compatibleAgents'
-    agentInfo = request_teamcity(agentUrl, headers)
-    xml = agentInfo.content.decode()
+    agent_url = f'{queue_url}/id:{build_id}/compatibleAgents'
+    agent_info = request_teamcity(agent_url, headers)
+    xml = agent_info.content.decode()
     agent = untangle.parse(xml)
     if agent.agents['count'] == '0':
         response = remove_builds(queue_url, build_id, headers)
