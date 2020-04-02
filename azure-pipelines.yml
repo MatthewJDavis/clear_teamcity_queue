@@ -28,15 +28,15 @@ steps:
 
 - script: |
     pip install pylint
-    cd clear_teamcity_queue
     pylint clear_teamcity_queue.py --errors-only
   displayName: 'pylint script'
+  workingDirectory: 'clear_teamcity_queue'
 
 - script: |
     pip install pylint
-    cd clear_teamcity_queue
     pylint helpers.py --errors-only
   displayName: 'pylint helpers'
+  workingDirectory: 'clear_teamcity_queue'
 
 - script: |
     pip install pytest pytest-azurepipelines
