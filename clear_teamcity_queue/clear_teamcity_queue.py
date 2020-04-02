@@ -1,6 +1,5 @@
 import os
-import untangle
-from helpers import request_teamcity, check_for_agent
+from helpers import request_teamcity, check_for_agent, get_queue_info
 
 baseUrl = 'http://localhost:8111/app/rest'
 queueUrl = f'{baseUrl}/buildQueue'
@@ -10,9 +9,7 @@ headers = {
     'Content-Type': 'application/xml',
 }
 
-response = request_teamcity(queueUrl, headers)
-xml = response.content.decode()
-queueList = untangle.parse(xml)
+queueList = get_queue_info(queueUrl=queueUrl, headers= headers)
 
 if len(queueList.builds) > 0:
     for buildInfo in queueList.builds.build:

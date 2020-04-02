@@ -13,9 +13,13 @@ def request_teamcity(url, headers):
         print(f'Another error occurred: {err}')
     return response
 
+
+def get_queue_info(queueUrl, headers):
+    response = request_teamcity(queueUrl, headers)
+    xml = response.content.decode()
+    return untangle.parse(xml)
+
 # remove from queue
-
-
 def remove_builds(queueUrl, buildId, headers):
     try:
         data = "<buildCancelRequest comment='No available agents to run build.' readdIntoQueue='false' />"
@@ -29,8 +33,6 @@ def remove_builds(queueUrl, buildId, headers):
         print(f'Another error occurred {err}')
 
 # Check if build has an agent and delete if not
-
-
 def check_for_agent(queueUrl, buildId, headers):
     agentUrl = f'{queueUrl}/id:{buildId}/compatibleAgents'
     agentInfo = request_teamcity(agentUrl, headers)
