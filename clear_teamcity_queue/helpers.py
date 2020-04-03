@@ -38,10 +38,12 @@ def check_for_agent(queue_url, build_id, headers):
     ''' Checks to see if the build has agents to run on '''
     agent_url = f'{queue_url}/id:{build_id}/compatibleAgents'
     agent_info = request_teamcity(agent_url, headers)
-    xml = agent_info.content.decode()
-    agent = untangle.parse(xml)
-    if agent.agents['count'] == '0':
-        response = remove_builds(queue_url, build_id, headers)
-        removed = untangle.parse(response.content.decode())
-        return f"Removed build: {removed.build.buildType['webUrl']}"
-    return 'Build has agents to run on.'
+    if agent_info.status_code == 200:
+        xml = agent_info.content.decode()
+        agent = untangle.parse(xml)
+        if agent.agents['count'] == '0':
+            response = remove_builds(queue_url, build_id, headers)
+            removed = untangle.parse(response.content.decode())
+            return f"Removed build: {removed.build.buildType['webUrl']}"
+        return 'Build has agents to run on.'
+    else: return 'Build has been removed from queue'
