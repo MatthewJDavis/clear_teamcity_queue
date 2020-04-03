@@ -28,14 +28,14 @@ steps:
 
 - script: |
     pip install pylint
-    pylint clear_teamcity_queue.py
-  displayName: 'pylint script'
+    pylint .
+  displayName: 'run pylint'
   workingDirectory: 'clear_teamcity_queue'
 
 - script: |
-    pip install pylint
-    pylint helpers.py
-  displayName: 'pylint helpers'
+    pip install pycodestyle
+    pycodestyle .
+  displayName: 'run pycodestyle'
   workingDirectory: 'clear_teamcity_queue'
 
 - script: |
