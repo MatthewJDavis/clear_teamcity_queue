@@ -28,13 +28,13 @@ steps:
 
 - script: |
     pip install pylint
-    pylint clear_teamcity_queue.py --errors-only
+    pylint clear_teamcity_queue.py
   displayName: 'pylint script'
   workingDirectory: 'clear_teamcity_queue'
 
 - script: |
     pip install pylint
-    pylint helpers.py --errors-only
+    pylint helpers.py
   displayName: 'pylint helpers'
   workingDirectory: 'clear_teamcity_queue'
 
