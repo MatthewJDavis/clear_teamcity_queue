@@ -3,3 +3,5 @@ docker run -it --name teamcity-server-instance  \
     -v /tmp/tc/logs:/opt/teamcity/logs  \
     -p 8111:8111 \
     jetbrains/teamcity-server
+
+docker run -it -e SERVER_URL="192.168.2.19:8111" -v /tmp/tc/agent:/data/teamcity_agent/conf jetbrains/teamcity-minimal-agent
