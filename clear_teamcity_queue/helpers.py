@@ -4,24 +4,26 @@ import untangle
 
 
 def request_teamcity(url, headers):
-    ''' Helper function to connect to TeamCity API '''
+    """ Helper function to connect to TeamCity API """
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')
-    return response
+        return response
+
 
 
 def get_queue_info(queue_url, headers):
-    ''' Returns TeamCity queue information as parsed XML '''
+    """ Returns TeamCity queue information as parsed XML """
     response = request_teamcity(queue_url, headers)
-    xml = response.content.decode()
-    return untangle.parse(xml)
+    if response.status_code == 200:
+        xml = response.content.decode()
+        return untangle.parse(xml)
 
 
 def remove_builds(queue_url, build_id, headers):
-    ''' Removes builds when no agents available '''
+    """ Removes builds when no agents available """
     try:
         data = "<buildCancelRequest \
                 comment = 'No available agents to run build.'\
@@ -35,7 +37,7 @@ def remove_builds(queue_url, build_id, headers):
 
 
 def check_for_agent(queue_url, build_id, headers):
-    ''' Checks to see if the build has agents to run on '''
+    """ Checks to see if the build has agents to run on """
     agent_url = f'{queue_url}/id:{build_id}/compatibleAgents'
     agent_info = request_teamcity(agent_url, headers)
     if agent_info.status_code == 200:
@@ -46,4 +48,5 @@ def check_for_agent(queue_url, build_id, headers):
             removed = untangle.parse(response.content.decode())
             return f"Removed build: {removed.build.buildType['webUrl']}"
         return 'Build has agents to run on.'
-    else: return 'Build has been removed from queue'
+    else:
+        return 'Build has been removed from queue'
