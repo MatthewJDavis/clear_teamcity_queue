@@ -10,7 +10,7 @@ def request_teamcity(url, headers):
         response.raise_for_status()
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')
-        return response
+    return response
 
 
 def get_queue_info(queue_url, headers):
