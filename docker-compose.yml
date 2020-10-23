@@ -1,0 +1,10 @@
+version: '3'
+services:
+  artifactory:
+    image: jetbrains/teamcity-server:latest
+    container_name: teamcity-server
+    ports:
+    - 8111:8111
+    volumes:
+    - /tmp/tc/datadir:/data/teamcity_server/datadir
+    - /tmp/tc/logs:/opt/teamcity/logs
