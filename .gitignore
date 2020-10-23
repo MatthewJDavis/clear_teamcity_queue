@@ -1,2 +1,4 @@
 *.sec
 *.pyc
+*.egg-info
+poetry.lock
