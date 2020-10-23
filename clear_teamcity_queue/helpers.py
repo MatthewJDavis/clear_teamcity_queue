@@ -13,7 +13,6 @@ def request_teamcity(url, headers):
         return response
 
 
-
 def get_queue_info(queue_url, headers):
     """ Returns TeamCity queue information as parsed XML """
     response = request_teamcity(queue_url, headers)
